@@ -12,6 +12,7 @@ $ValidAnswer = @(
     'n'
     'o'
     )
+#clear screen for better view
 cls
 Write-Host "Ce script permet la création d'un utilisateur de l'Active Directory ainsi que son dossier personnel" -ForegroundColor Green -BackgroundColor Red
 pause
