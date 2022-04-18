@@ -100,28 +100,28 @@ while ([String]::IsNullOrEmpty($Answer))
                 {
                 New-ADUser -Name $Name -GivenName $FirstName -Surname $LastName -SamAccountName $Username -UserPrincipalName $Username@axeplane.loc -Type iNetOrgPerson -AccountPassword (ConvertTo-SecureString -AsPlainText $Password -Force) -ChangePasswordAtLogon $false -PasswordNeverExpires $true -CannotChangePassword $false -Enabled $true | Out-Host 
                 Write-Host "L'utilisateur a été créé" -ForegroundColor Green
+                try
+                    {
+                    New-Item -Name $Name -ItemType Directory -Path E:\Sauvegardes | Out-Null 
+                    Write-Host "Le dossier personnel de l'utilisateur a été créé" -ForegroundColor Green
+                    try
+                        {
+                        New-SmbShare -Name $Name -Path E:\Sauvegardes\$Name -FullAccess $Username | Out-Null
+                        Write-Host "Le partage du dossier personnel de l'utilisateur a été configuré" -ForegroundColor Green
+                        }
+                    catch
+                        {
+                        Write-Warning "Echec de la configuration du dossier personnel de l'utilisateur"
+                        }
+                    }
+                catch
+                    {
+                    Write-Warning "Echec de la création du dossier personnel de l'utilisateur"
+                    }
                 }
             catch
                 {
                 Write-Warning "Echec de la création de l'utilisateur"
-                }
-            try
-                {
-                New-Item -Name $Name -ItemType Directory -Path E:\Sauvegardes | Out-Null 
-                Write-Host "Le dossier personnel de l'utilisateur a été créé" -ForegroundColor Green
-                }
-            catch
-                {
-                Write-Warning "Echec de la création du dossier personnel de l'utilisateur"
-                }
-            try
-                {
-                New-SmbShare -Name $Name -Path E:\Sauvegardes\$Name -FullAccess $Username | Out-Null
-                Write-Host "Le partage du dossier personnel de l'utilisateur a été configuré" -ForegroundColor Green
-                }
-            catch
-                {
-                Write-Warning "Echec de la configuration du dossier personnel de l'utilisateur"
                 }
             }   
         'n'
