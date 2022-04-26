@@ -9,7 +9,15 @@ Description : Script de sauvegarde des données utilisateurs (C:\Users de chaque
 
 $Users = Get-ADUser -filter * | select name
 
-foreach($u in Users) {
-$name = $u.name
-Copy-Item -Path C:\Users\$name -Destination \\SRVFRANCISCA\Sauvegardes\$name -Recurse -ErrorAction SilentlyContinue
-}
+foreach($u in $Users) 
+  {
+  $name = $u.name
+  Copy-Item -Path C:\Users\$name -Destination \\SRVFRANCISCA\Sauvegardes\$name -Recurse -ErrorAction SilentlyContinue
+  }
+
+<#
+ foreach($u in $Users) 
+  {
+  Copy-Item -Path C:\Users\$u.name -Destination \\SRVFRANCISCA\Sauvegardes\$u.name -Recurse -ErrorAction SilentlyContinue
+  } 
+ #>
