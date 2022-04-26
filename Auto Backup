@@ -1,0 +1,21 @@
+#Action
+
+$Action = New-ScheduledTaskAction -Execute 
+ 
+'Powershell.exe' -Argument "-NonInteractive -NoLogo -NoProfile -File 'C:\Save_User.ps1'"
+
+
+#Trigger
+
+$Trigger = New-ScheduledTaskTrigger -Daily -AtLogOn
+$Trigger.delay = "PT2H"
+
+
+#Task Trigger>Action
+
+$Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings (New-ScheduledTaskSettingsSet)
+
+
+#Task PC
+
+$Task | Register-ScheduledTask -TaskName 'BackUp Automation' 
