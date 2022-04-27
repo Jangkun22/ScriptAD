@@ -25,9 +25,6 @@ do
     
     # Demande interactive de l'identifiant de l'utilisateur à rechercher.
     $Username = Read-Host "Identifiant de l'Utilisateur"
-    
-    #Définition du chemin d'export
-    $ExportDir = 'C:\Users\Administrateur\Documents\Export\$Username.txt'
 
     # Tentative de correspondance entre le $username et les utilisateurs existants.
     try
@@ -60,6 +57,9 @@ do
             {
             'o'
                 {
+                #Définition du chemin d'export
+                $ExportDirUsername = 'C:\Users\Administrateur\Documents\Export\$Username.txt'
+    
                 Get-ADPrincipalGroupMembership $Username | select name | Export-Csv $ExportDir
                 Write-Host "La liste des groupes de l'utilisateur $Username a été exporté dans le dossier Export"
                 $Answer = ''
