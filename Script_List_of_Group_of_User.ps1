@@ -21,17 +21,18 @@ pause
 do
     {
     cls
-
+    $Username = ''
+    
     # Demande interactive de l'identifiant de l'utilisateur à rechercher.
-    $username = Read-Host "Identifiant de l'Utilisateur"
+    $Username = Read-Host "Identifiant de l'Utilisateur"
 
     # Tentative de correspondance entre le $username et les utilisateurs existants.
     try
 
-        # Affiche le nom des groupes dont l'utilisateur correspondant à $username est membre.
+        # Affiche le nom des groupes dont l'utilisateur correspondant à $Username est membre.
         {
-        Get-ADUser $username | Out-Null
-        $GroupList = Get-ADPrincipalGroupMembership $username | select name
+        Get-ADUser $Username | Out-Null
+        $GroupList = Get-ADPrincipalGroupMembership $Username | select name
         foreach ($u in $GroupList)
             {
             $u.name
@@ -56,13 +57,16 @@ do
             {
             'o'
                 {
-                Get-ADPrincipalGroupMembership $username | select name | Export-Csv C:\Users\Administrateur\Documents\Export\$username.txt
-                Write-Host "La liste des groupes de l'utilisateur $username a été exporté dans le dossier Export"
+                #Définition du chemin d'export
+                $DirExportUsername = 'C:\Users\Administrateur\Documents\Export\$Username.txt'
+    
+                Get-ADPrincipalGroupMembership $Username | select name | Export-Csv $DirExportUsername
+                Write-Host "La liste des groupes de l'utilisateur $Username a été exporté dans le dossier Export"
                 $Answer = ''
                 }
             'n'
                 {
-                Write-Host "La liste des groupes de l'utilisateur $username n'a pas été exporté"
+                Write-Host "La liste des groupes de l'utilisateur $Username n'a pas été exporté"
                 $Answer = ''
                 }
             }
@@ -71,7 +75,7 @@ do
     # Message à afficher en cas d'échec dans le bloc try.
     catch
         {
-        Write-Warning "L'utilisateur $username n'existe pas."
+        Write-Warning "L'utilisateur $Username n'existe pas."
         }
 
     <#

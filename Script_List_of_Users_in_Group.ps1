@@ -56,7 +56,8 @@ do
             {
             'o'
                 {
-                Get-ADGroupMember $Group | Select-Object name | Export-Csv C:\Users\Administrateur\Documents\Export\$Group.txt
+                $DirExportGroup = 'C:\Users\Administrateur\Documents\Export\$Group.txt'
+                Get-ADGroupMember $Group | Select-Object name | Export-Csv $DirExportGroup
                 Write-Host "La liste des membres du groupe $Group a été exporté dans le dossier Export"
                 $Answer = ''
                 }
