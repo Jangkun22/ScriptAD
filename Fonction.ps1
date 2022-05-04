@@ -27,9 +27,18 @@ try
                     }
                 }
             }
+}
 
+$DirPersonnalFolder = E:\Dossiers Personnels
+$DirPersonnalFolderUser = E:\Dossiers Personnels\$Name
 
-
+function Create-User {
+                New-ADUser -Name $Name -GivenName $FirstName -Surname $LastName -SamAccountName $Username -UserPrincipalName $Username@axeplane.loc -Type iNetOrgPerson -AccountPassword (ConvertTo-SecureString -AsPlainText $Password -Force) -ChangePasswordAtLogon $false -PasswordNeverExpires $true -CannotChangePassword $false -Enabled $true | Out-Host    
+                New-Item -Name $Name -ItemType Directory -Path $DirPersonnalFolder | Out-Null
+                New-SmbShare -Name $Name -Path $DirPersonnalFolderUser -FullAccess $Username | Out-Null
+                Write-Host "L'utilisateur a été créé" -ForegroundColor Green
+                Write-Host "Le dossier personnel de l'utilisateur a été créé et configuré" -ForegroundColor Green
+}
 
 
 
