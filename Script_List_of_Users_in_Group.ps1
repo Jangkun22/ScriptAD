@@ -40,6 +40,7 @@ do
             }
 
         # Demande interactive d'export.
+
         # Avertissement de l'erreur et réitération de la demande en cas de réponse invalide (autre que "o" (oui) et "n" (non)).
         while ([String]::IsNullOrEmpty($Answer))
             {
