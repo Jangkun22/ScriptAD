@@ -1,18 +1,20 @@
 ﻿<#
-
 Auteur : Martin Guigot
-Date : 01/04/2022
-Version : 1.0
+Date : 08/05/2022
+Version : 1.12
 Description : Script intéractif de création d'utilisateurs de l'Active Directory et de leur dossier personnel.
-
 #>
 
+
+# Définition de variables.
 $Answer = ''
 $ValidAnswer = @(
     'n'
     'o'
     )
-#clear screen for better view
+$DirPerso = 'E:\Partages personnels'
+
+# Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
 cls
 Write-Host "Ce script permet la création d'un utilisateur de l'Active Directory ainsi que son dossier personnel" -ForegroundColor Green -BackgroundColor Red
 pause
@@ -25,6 +27,7 @@ while ([String]::IsNullOrEmpty($Answer))
     $Username = ''
     $Password = ''
     $Name = ''
+
     while([String]::IsNullOrEmpty($LastName))
         {
         $LastName = Read-Host "Nom de l'utilisateur"
@@ -48,7 +51,7 @@ while ([String]::IsNullOrEmpty($Answer))
         try
             {
             Get-ADUser $Username | Out-Null
-            Write-Warning "L'identifiant existe déjà."
+            Write-Warning "L'identifiant existe déjà ."
             $Username = ''
             }
         catch
@@ -64,7 +67,7 @@ while ([String]::IsNullOrEmpty($Answer))
                     Write-Warning "Veuillez saisir un identifiant."
                     }
                 }
-            }
+            }            
         }
     while([String]::IsNullOrEmpty($Password))
         {
@@ -80,7 +83,6 @@ while ([String]::IsNullOrEmpty($Answer))
     Write-Host "Récapitulatif des données utilisateur :"
     Write-Host "Nom : $LastName"
     Write-Host "Prénom : $FirstName"
-    #Same Name
     Write-Host "Identifiant : $Username"
     Write-Host "Mot de passe : $Password"
     while ([String]::IsNullOrEmpty($Answer))
@@ -102,11 +104,11 @@ while ([String]::IsNullOrEmpty($Answer))
                 Write-Host "L'utilisateur a été créé" -ForegroundColor Green
                 try
                     {
-                    New-Item -Name $Name -ItemType Directory -Path E:\Sauvegardes | Out-Null 
+                    New-Item -Name $Name -ItemType Directory -Path $DirPerso | Out-Null 
                     Write-Host "Le dossier personnel de l'utilisateur a été créé" -ForegroundColor Green
                     try
                         {
-                        New-SmbShare -Name $Name -Path E:\Sauvegardes\$Name -FullAccess $Username | Out-Null
+                        New-SmbShare -Name $Username -Path $DirPerso\$Name -FullAccess $Username | Out-Null
                         Write-Host "Le partage du dossier personnel de l'utilisateur a été configuré" -ForegroundColor Green
                         }
                     catch
@@ -121,7 +123,7 @@ while ([String]::IsNullOrEmpty($Answer))
                 }
             catch
                 {
-                Write-Warning "Echec de la création de l'utilisateur"
+                Write-Warning "Erreur lors de la création de l'utilisateur"
                 }
             }   
         'n'

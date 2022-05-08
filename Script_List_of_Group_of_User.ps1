@@ -1,18 +1,20 @@
 ﻿<#
-
 Auteur : Martin Guigot
-Date : 01/04/2022
-Version : 1.0
+Date : 09/05/2022
+Version : 1.03
 Description : Script intéractif de consultation et d'export des groupes d'un utilisateur de l'Active Directory.
-
 #>
 
-    # Définition de variables.
+# Définition de variables.
 $Answer = ''
 $ValidAnswer = @(
     'n'
     'o'
     )
+$Username = ''
+$DirExport = 'C:\Users\Administrateur\Documents\Export'
+
+# Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
 cls
 Write-Host "Ce script permet de lister les groupes d'un utilisateur de l'Active Directory" -ForegroundColor Green -BackgroundColor Red
 pause
@@ -21,7 +23,6 @@ pause
 do
     {
     cls
-    $Username = ''
     
     # Demande interactive de l'identifiant de l'utilisateur à rechercher.
     $Username = Read-Host "Identifiant de l'Utilisateur"
@@ -38,12 +39,8 @@ do
             $u.name
             }
 
-        <#
-        Interaction de demande d'export.
-            Avertissement de l'erreur et réitération de la demande en cas de réponse invalide (autre que "o" (oui) et "n" (non)).
-            Export de la liste des groupes de $username dans le fichier Export + message en cas de réponse positive.
-            Message en cas de réponse négative.
-        #>
+        # Demande interactive d'export.
+        # Avertissement de l'erreur et réitération de la demande en cas de réponse invalide (autre que "o" (oui) et "n" (non)).    
         while ([String]::IsNullOrEmpty($Answer))
             {
             $Answer = Read-Host "Exporter les résultats ? (O/N)"
@@ -53,14 +50,13 @@ do
                 $Answer = ''
                 }
             }
+
+        # Export de la liste des groupes de $username dans le fichier Export + message en cas de réponse positive. Message en cas de réponse négative.
         switch ($Answer)
             {
             'o'
                 {
-                #Définition du chemin d'export
-                $DirExportUsername = 'C:\Users\Administrateur\Documents\Export\$Username.txt'
-    
-                Get-ADPrincipalGroupMembership $Username | select name | Export-Csv $DirExportUsername
+                Get-ADPrincipalGroupMembership $Username | select name | Export-Csv $DirExport\$Username.txt
                 Write-Host "La liste des groupes de l'utilisateur $Username a été exporté dans le dossier Export"
                 $Answer = ''
                 }

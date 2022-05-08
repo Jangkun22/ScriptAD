@@ -1,10 +1,8 @@
 ﻿<#
-
 Auteur : Martin Guigot
-Date : 01/04/2022
-Version : 1.0
+Date : 09/05/2022
+Version : 1.03
 Description : Script intéractif de consultation et d'export des membres d'un groupe de l'Active Directory.
-
 #>
 
 # Définition de variables.
@@ -13,6 +11,10 @@ $ValidAnswer = @(
     'n'
     'o'
     )
+$Group = ''
+$DirExport = 'C:\Users\Administrateur\Documents\Export'
+
+# Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
 cls
 Write-Host "Ce script permet de lister les membres d'un groupe de l'Active Directory" -ForegroundColor Green -BackgroundColor Red
 pause
@@ -37,12 +39,8 @@ do
             $u.name
             }
 
-        <#
-        Interaction de demande d'export.
-            Avertissement de l'erreur et réitération de la demande en cas de réponse invalide (autre que "o" (oui) et "n" (non)).
-            Export de la liste des utilisateurs du $Group dans le fichier Export + message en cas de réponse positive.
-            Message en cas de réponse négative.
-        #>
+        # Demande interactive d'export.
+        # Avertissement de l'erreur et réitération de la demande en cas de réponse invalide (autre que "o" (oui) et "n" (non)).
         while ([String]::IsNullOrEmpty($Answer))
             {
             $Answer = Read-Host "Exporter les résultats ? (O/N)"
@@ -52,12 +50,13 @@ do
                 $Answer = ''
                 }
             }
+
+        # Export de la liste des utilisateurs du $Group dans le fichier Export + message en cas de réponse positive. Message en cas de réponse négative.
         switch ($Answer)
             {
             'o'
                 {
-                $DirExportGroup = 'C:\Users\Administrateur\Documents\Export\$Group.txt'
-                Get-ADGroupMember $Group | Select-Object name | Export-Csv $DirExportGroup
+                Get-ADGroupMember $Group | Select-Object name | Export-Csv $DirExport\$Group.txt
                 Write-Host "La liste des membres du groupe $Group a été exporté dans le dossier Export"
                 $Answer = ''
                 }
@@ -95,4 +94,3 @@ do
         }
     }
 until($Answer -like 'n')
-
