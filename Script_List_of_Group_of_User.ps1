@@ -23,6 +23,7 @@ pause
 do
     {
     cls
+    $Username = ''
     
     # Demande interactive de l'identifiant de l'utilisateur à rechercher.
     $Username = Read-Host "Identifiant de l'Utilisateur"

@@ -1,0 +1,20 @@
+<#
+Auteur : Martin Guigot
+Date : 01/04/2022
+Version : 1.0
+Description : Script intéractif de création d'utilisateurs de l'Active Directory et de leur dossier personnel.
+#>
+
+$Answer = ''
+$ValidAnswer = @(
+    'n'
+    'o'
+    )
+#clear screen for better view
+cls
+Write-Host "Ce script permet la création d'un utilisateur de l'Active Directory ainsi que son dossier personnel" -ForegroundColor Green -BackgroundColor Red
+pause
+cls
+
+
+
