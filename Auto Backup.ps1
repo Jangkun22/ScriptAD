@@ -1,21 +1,39 @@
-#Action
-$ScriptBackUp = C:\Save_User.ps1
+<#
+
+Auteur : Martin Guigot
+Date : 09/05/2022
+Version : 1.0
+Description : Script de création de tâche planifiée pour automatiser la sauvegarde utilisateur.
+
+#>
+
+
+<#
+Action - Ce que fait la tâche.
+Lance le script "Save_User".
+#>
+
+#$DirBackUp = C:\Users\Administrateur\Documents\GitHub\ScriptAD.
+$ScriptBackUp = ".\Save_User.ps1"
 
 $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "-NonInteractive -NoLogo -NoProfile -File '$ScriptBackUp'"
 
 
-#Trigger
+<#
+Trigger - Conditions de déclenchement de la tâche.
+Se déclenche à l'ouverture de session.
+#>
 
 $Trigger = New-ScheduledTaskTrigger -AtLogOn
 $Trigger.delay = "PT4H"
 
 
-#Task Trigger>Action
+#Création de la tâche + configuration de l'Action et du Trigger.
 
 $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings (New-ScheduledTaskSettingsSet)
 
 
-#Task PC
+#Enregistrement de la tâche.
 
 $Task | Register-ScheduledTask -TaskName 'BackUp Automation' 
 
