@@ -100,7 +100,7 @@ while ([String]::IsNullOrEmpty($Answer))
             {
             try
                 {
-                New-ADUser -Name $Name -GivenName $FirstName -Surname $LastName -SamAccountName $Username -UserPrincipalName $Username@axeplane.loc -Type iNetOrgPerson -AccountPassword (ConvertTo-SecureString -AsPlainText $Password -Force) -ChangePasswordAtLogon $false -PasswordNeverExpires $true -CannotChangePassword $false -Enabled $true | Out-Host 
+                New-ADUser -Name $Name -GivenName $FirstName -Surname $LastName -SamAccountName $Username -DisplayName $Name -UserPrincipalName $Username@axeplane.loc -Type iNetOrgPerson -AccountPassword (ConvertTo-SecureString -AsPlainText $Password -Force) -ChangePasswordAtLogon $false -PasswordNeverExpires $true -CannotChangePassword $false -Enabled $true | Out-Host 
                 Write-Host "L'utilisateur a été créé" -ForegroundColor Green
                 try
                     {
