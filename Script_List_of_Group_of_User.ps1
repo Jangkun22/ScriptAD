@@ -12,17 +12,19 @@ $ValidAnswer = @(
     'o'
     )
 $Username = ''
-$DirExport = 'C:\Users\Administrateur\Documents\Export'
+
+#{Utiliser un chemin complet au lieu}
+$DirExport = "C:\Users\$env:USERNAME\documents\Export"
 
 # Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
-cls
+#cls
 Write-Host "Ce script permet de lister les groupes d'un utilisateur de l'Active Directory" -ForegroundColor Green -BackgroundColor Red
 pause
 
 # Bloc Do-Until pour réitérer la recherche jusqu'à refus d'une nouvelle recherche ($Answer = 'n').
 do
     {
-    cls
+    #cls
     $Username = ''
     
     # Demande interactive de l'identifiant de l'utilisateur à rechercher.
@@ -52,13 +54,12 @@ do
                 $Answer = ''
                 }
             }
-
         # Export de la liste des groupes de $username dans le fichier Export + message en cas de réponse positive. Message en cas de réponse négative.
         switch ($Answer)
             {
             'o'
                 {
-                Get-ADPrincipalGroupMembership $Username | select name | Export-Csv $DirExport\$Username.txt
+                Get-ADPrincipalGroupMembership $Username | Select-Object name | Export-Csv "$DirExport\$Username.txt"
                 Write-Host "La liste des groupes de l'utilisateur $Username a été exporté dans le dossier Export"
                 $Answer = ''
                 }

@@ -12,7 +12,8 @@ $ValidAnswer = @(
     'o'
     )
 $Group = ''
-$DirExport = 'C:\Users\Administrateur\Documents\Export'
+##{Utiliser un chemin complet au lieu}
+$DirExport = "C:\Users\$env:USERNAME\Documents\Export"
 
 # Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
 cls

@@ -21,7 +21,7 @@ $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "-NonInter
 
 <#
 Trigger - Conditions de déclenchement de la tâche.
-Se déclenche à l'ouverture de session.
+Se déclenche à l'ouverture de session +4h.
 #>
 
 $Trigger = New-ScheduledTaskTrigger -AtLogOn

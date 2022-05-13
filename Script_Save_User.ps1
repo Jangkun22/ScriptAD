@@ -8,33 +8,22 @@ Description : Script de sauvegarde des données utilisateurs (C:\Users de chaque
 #>
 
 # Définition des variables.
-$DirBackUp = '\\SRVFRANCISCA\Sauvegardes'
-$DirFiles = 'C:\Users'
-$DirLog = 'C:\Users\Administrateur\documents\log.txt'
-$Computer = HOSTNAME.EXE
+$DirBackUp = 'E:\Sauvegarde'
+$DirFiles = "C:\Users\$env:USERNAME\Downloads"
 
-# Test du chemin d'accès du dossier de sauvegarde du poste de l'utilisateur.
-$TestDirUserComputer = Test-Path -Path $DirBackUp\$env:USERNAME\$Computer
+# Compression des données à sauvegarder dans le dossier de sauvegarde de l'utilisateur dans une archive au nom du poste sur lequel il se connecte.
+
 
 # Test du chemin d'accès du dossier de sauvegarde de l'utilisateur.
 $TestDirSaveUser = Test-Path -Path $DirBackUp\$env:USERNAME
 
-# Création d'un dossier de sauvegarde du poste de l'utilisateur s'il n'existe pas et création d'un dossier de sauvegarde de l'utilisateur et de son poste si le dossier de sauvegarde de l'utilisateur n'existe pas.
-switch ($TestDirUserComputer) {
-    False { 
-        switch ($TestDirSaveUser) {
-            False { 
-                New-Item -Name $env:USERNAME -ItemType Directory -Path $DirBackUp | Out-Null
-                New-Item -Name $Computer -ItemType Directory -Path $DirBackUp\$env:USERNAME | Out-Null
-                }
-            True {New-Item -Name $Computer -ItemType Directory -Path $DirBackUp\$env:USERNAME | Out-Null}
-        } 
-    }
-    Default {
-        # Compression des données à sauvegarder sur dans le dossier de sauvegarde de l'utilisateur de chacun des PC.
-        Compress-Archive -Path $DirFiles -Destination $DirBackUp\$env:USERNAME\$Computer >$DirLog
-    }
-}
- 
+# Création d'un dossier de sauvegarde de l'utilisateur s'il n'existe pas.
+switch ($TestDirSaveUser) {
+    False {New-Item -Name $env:USERNAME -ItemType Directory -Path $DirBackUp | Out-Null}
+    Default{}    
+    } 
 
+       
+Compress-Archive -Path $DirFiles -Destination $DirBackUp\$env:USERNAME\$env:COMPUTERNAME -force
+# Copy-Item -Path $DirFiles -Destination "$DirBackUp\$env:USERNAME\$env:COMPUTERNAME\"
 
