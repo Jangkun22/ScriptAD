@@ -13,8 +13,7 @@ Action - Ce que fait la tâche.
 Lance le script "Save_User".
 #>
 
-#$DirBackUp = C:\Users\Administrateur\Documents\GitHub\ScriptAD.
-$ScriptBackUp = ".\Save_User.ps1"
+$ScriptBackUp = 'C:\Users\Administrateur\Documents\GitHub\ScriptAD\Script_Save_User.ps1'
 
 $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "-NonInteractive -NoLogo -NoProfile -File '$ScriptBackUp'"
 
@@ -25,7 +24,7 @@ Se déclenche à l'ouverture de session +4h.
 #>
 
 $Trigger = New-ScheduledTaskTrigger -AtLogOn
-$Trigger.delay = "PT4H"
+#$Trigger.delay = "PT4H"
 
 
 #Création de la tâche + configuration de l'Action et du Trigger.
