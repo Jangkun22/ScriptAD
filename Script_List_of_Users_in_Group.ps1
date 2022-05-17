@@ -12,8 +12,8 @@ $ValidAnswer = @(
     'o'
     )
 $Group = ''
-##{Utiliser un chemin complet au lieu}
-$DirExport = "C:\Users\$env:USERNAME\Documents\Export"
+$DirDoc = "C:\Users\$env:USERNAME\documents"
+$DirExport = "$DirDoc\Export"
 
 # Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
 cls
@@ -58,6 +58,15 @@ do
             {
             'o'
                 {
+                
+                # Création d'un dossier Export s'il n'existe pas.
+                $TestDirExport = Test-Path -Path $DirExport
+                $TestDirExport
+                switch ($TestDirExport) {
+                    False {New-Item -Name 'Export' -ItemType Directory -Path $DirDoc | Out-Null}
+                    Default{}  
+                    }
+
                 Get-ADGroupMember $Group | Select-Object name | Export-Csv $DirExport\$Group.txt
                 Write-Host "La liste des membres du groupe $Group a été exporté dans le dossier Export"
                 $Answer = ''
@@ -83,7 +92,7 @@ do
     #>
     while ([String]::IsNullOrEmpty($Answer))
         {
-        $Answer = Read-Host "Chercher un autre groupe ? (O/N)"
+        $Answer = Read-Host 'Chercher un autre groupe ? (O/N)'
         if ($Answer -notin $ValidAnswer)
             {
             Write-Warning 'Réponse non valide. Répondre par "o" pour oui ou "n" pour non'

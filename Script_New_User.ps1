@@ -64,7 +64,7 @@ while ([String]::IsNullOrEmpty($Answer))
                     }
                 ''
                     {
-                    Write-Warning "Veuillez saisir un identifiant."
+                    Write-Warning 'Veuillez saisir un identifiant.'
                     }
                 }
             }            
@@ -74,21 +74,22 @@ while ([String]::IsNullOrEmpty($Answer))
         $Password = Read-Host "Mot de passe de l'utilisateur"
         if ([String]::IsNullOrEmpty($Password))
             {
-            Write-Warning "Veuillez saisir un mot de passe utilisateur."
+            Write-Warning 'Veuillez saisir un mot de passe utilisateur.'
             }
         }
     pause
     do
-    {cls
-    Write-Host "Récapitulatif des données utilisateur :"
-    Write-Host "Nom : $LastName"
-    Write-Host "Prénom : $FirstName"
-    Write-Host "Identifiant : $Username"
-    Write-Host "Mot de passe : $Password"
-    while ([String]::IsNullOrEmpty($Answer))
         {
-        $Answer = Read-Host "Valider les informations ? (O/N)"
-        if ($Answer -notin $ValidAnswer)
+        cls
+        Write-Host 'Récapitulatif des données utilisateur :'
+        Write-Host "Nom : $LastName"
+        Write-Host "Prénom : $FirstName"
+        Write-Host "Identifiant : $Username"
+        Write-Host "Mot de passe : $Password"
+        while ([String]::IsNullOrEmpty($Answer))
+            {
+            $Answer = Read-Host 'Valider les informations ? (O/N)'
+            if ($Answer -notin $ValidAnswer)
                 {
                 Write-Warning 'Réponse non valide. Répondre par "o" pour oui ou "n" pour non'
                 $Answer = ''
@@ -204,7 +205,7 @@ while ([String]::IsNullOrEmpty($Answer))
                                     }
                                 ''
                                     {
-                                    Write-Warning "Veuillez saisir un identifiant."
+                                    Write-Warning 'Veuillez saisir un identifiant.'
                                     }
                                 }
                             }
@@ -228,7 +229,7 @@ while ([String]::IsNullOrEmpty($Answer))
                         $Password = Read-Host "Mot de passe de l'utilisateur"
                         if ([String]::IsNullOrEmpty($Password))
                             {
-                            Write-Warning "Veuillez saisir un mot de passe utilisateur."
+                            Write-Warning 'Veuillez saisir un mot de passe utilisateur.'
                             }
                         }
                     }
@@ -241,7 +242,7 @@ while ([String]::IsNullOrEmpty($Answer))
     $Answer = ''
     while ([String]::IsNullOrEmpty($Answer))
         {
-        $Answer = Read-Host "Créer un autre utilisateur ? (O/N)"
+        $Answer = Read-Host 'Créer un autre utilisateur ? (O/N)'
         if ($Answer -notin $ValidAnswer)
             {
             Write-Warning 'Réponse non valide. Répondre par "o" pour oui ou "n" pour non'

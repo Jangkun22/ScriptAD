@@ -12,19 +12,18 @@ $ValidAnswer = @(
     'o'
     )
 $Username = ''
-
-#{Utiliser un chemin complet au lieu}
-$DirExport = "C:\Users\$env:USERNAME\documents\Export"
+$DirDoc = "C:\Users\$env:USERNAME\documents"
+$DirExport = "$DirDoc\Export"
 
 # Effacement du texte à l'écran pour une vue plus dégagée et présentation du script.
-#cls
+cls
 Write-Host "Ce script permet de lister les groupes d'un utilisateur de l'Active Directory" -ForegroundColor Green -BackgroundColor Red
 pause
 
 # Bloc Do-Until pour réitérer la recherche jusqu'à refus d'une nouvelle recherche ($Answer = 'n').
 do
     {
-    #cls
+    cls
     $Username = ''
     
     # Demande interactive de l'identifiant de l'utilisateur à rechercher.
@@ -47,7 +46,7 @@ do
         # Avertissement de l'erreur et réitération de la demande en cas de réponse invalide (autre que "o" (oui) et "n" (non)).    
         while ([String]::IsNullOrEmpty($Answer))
             {
-            $Answer = Read-Host "Exporter les résultats ? (O/N)"
+            $Answer = Read-Host 'Exporter les résultats ? (O/N)'
             if ($Answer -notin $ValidAnswer)
                 {
                 Write-Warning 'Réponse non valide. Répondre par "o" pour oui ou "n" pour non'
@@ -59,6 +58,15 @@ do
             {
             'o'
                 {
+
+                # Création d'un dossier Export s'il n'existe pas.
+                $TestDirExport = Test-Path -Path $DirExport
+                $TestDirExport
+                switch ($TestDirExport) {
+                    False {New-Item -Name 'Export' -ItemType Directory -Path $DirDoc | Out-Null}
+                    Default{}  
+                    }
+
                 Get-ADPrincipalGroupMembership $Username | Select-Object name | Export-Csv "$DirExport\$Username.txt"
                 Write-Host "La liste des groupes de l'utilisateur $Username a été exporté dans le dossier Export"
                 $Answer = ''
@@ -84,7 +92,7 @@ do
     #>
     while ([String]::IsNullOrEmpty($Answer))
         {
-        $Answer = Read-Host "Chercher un autre utilisateur ? (O/N)"
+        $Answer = Read-Host 'Chercher un autre utilisateur ? (O/N)'
         if ($Answer -notin $ValidAnswer)
             {
             Write-Warning 'Réponse non valide. Répondre par "o" pour oui ou "n" pour non'
