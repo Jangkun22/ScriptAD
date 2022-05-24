@@ -1,7 +1,7 @@
 ﻿<#
 Auteur : Martin Guigot
 Date : 08/05/2022
-Version : 1.12
+Version : 1.2
 Description : Script intéractif de création d'utilisateurs de l'Active Directory et de leur dossier personnel.
 #>
 
@@ -20,6 +20,7 @@ Write-Host "Ce script permet la création d'un utilisateur de l'Active Directory
 pause
 cls
 
+# Bloc while pour réitérer la création jusqu'à refus d'une nouvelle création ($Answer = 'n').
 while ([String]::IsNullOrEmpty($Answer))
     {
     $LastName = '' 
@@ -28,6 +29,7 @@ while ([String]::IsNullOrEmpty($Answer))
     $Password = ''
     $Name = ''
 
+    # Bloc while pour définir le nom de l'utilisateur.
     while([String]::IsNullOrEmpty($LastName))
         {
         $LastName = Read-Host "Nom de l'utilisateur"
@@ -36,7 +38,9 @@ while ([String]::IsNullOrEmpty($Answer))
             Write-Warning "Veuillez saisir un nom d'utilisateur."
             }
         }
-     while([String]::IsNullOrEmpty($FirstName))
+
+    # Bloc while pour définir le prénom de l'utilisateur.
+    while([String]::IsNullOrEmpty($FirstName))
         {
         $FirstName = Read-Host "Prénom de l'utilisateur"
         if ([String]::IsNullOrEmpty($FirstName))
@@ -44,14 +48,20 @@ while ([String]::IsNullOrEmpty($Answer))
             Write-Warning "Veuillez saisir un prénom d'utilisateur."
             }
         }
+
+    # Définition du nom complet.
     $Name = "$FirstName $LastName"
+
+    # Bloc while pour définir l'identifiant de l'utilisateur.
     while ([String]::IsNullOrEmpty($Username))
         {
         $Username = Read-Host "Identifiant de l'utilisateur"
+        
+        # Vérification de la disponibilité de l'identifiant.
         try
             {
             Get-ADUser $Username | Out-Null
-            Write-Warning "L'identifiant existe déjà ."
+            Write-Warning "L'identifiant existe déjà."
             $Username = ''
             }
         catch
@@ -69,6 +79,8 @@ while ([String]::IsNullOrEmpty($Answer))
                 }
             }            
         }
+
+    # Bloc while pour définir le mot de passe de l'utilisateur.
     while([String]::IsNullOrEmpty($Password))
         {
         $Password = Read-Host "Mot de passe de l'utilisateur"
@@ -78,9 +90,13 @@ while ([String]::IsNullOrEmpty($Answer))
             }
         }
     pause
+
+    # Bloc do-until de création de l'utilisateur.
     do
         {
         cls
+
+        # Récapitulatif des données de l'utilisateur.
         Write-Host 'Récapitulatif des données utilisateur :'
         Write-Host "Nom : $LastName"
         Write-Host "Prénom : $FirstName"
@@ -94,9 +110,10 @@ while ([String]::IsNullOrEmpty($Answer))
                 Write-Warning 'Réponse non valide. Répondre par "o" pour oui ou "n" pour non'
                 $Answer = ''
                 }
-        }
+            }
     Switch($Answer)
         {
+        # Création procédurale de l'utilisateur, de son dossier personnel et de sa configuration. Message d'erreur en cas d'échec.
         'o'
             {
             try
@@ -111,10 +128,22 @@ while ([String]::IsNullOrEmpty($Answer))
                         {
                         New-SmbShare -Name $Username -Path $DirPerso\$Name -FullAccess $Username | Out-Null
                         Write-Host "Le partage du dossier personnel de l'utilisateur a été configuré" -ForegroundColor Green
+                        try
+                            {
+                            $ACLUser = New-Object System.Security.Principal.NTAccount($Username)
+                            $ACl = Get-Acl -Path $DirPerso\$Name
+                            $ACl.SetOwner($ACLUser)
+                            $ACl | Set-Acl -Path $DirPerso\$Name
+                            "Les autorisations NTFS du dossier personnel de l'utilisateur ont été configuré" -ForegroundColor Green
+                            }
+                        catch
+                            {
+                            Write-Warning "Echec de la configuration des autorisations NTFS du dossier personnel de l'utilisateur"    
+                            }
                         }
                     catch
                         {
-                        Write-Warning "Echec de la configuration du dossier personnel de l'utilisateur"
+                        Write-Warning "Echec de la configuration des autorisations de partage du dossier personnel de l'utilisateur"
                         }
                     }
                 catch
@@ -126,7 +155,8 @@ while ([String]::IsNullOrEmpty($Answer))
                 {
                 Write-Warning "Erreur lors de la création de l'utilisateur"
                 }
-            }   
+            }  
+        # Correction des informations de l'utilisateur.     
         'n'
             {
             $Answer = ''
@@ -240,6 +270,8 @@ while ([String]::IsNullOrEmpty($Answer))
     }
     until($Answer -like 'o')
     $Answer = ''
+
+    # Bloc while pour demander une nouvelle création.
     while ([String]::IsNullOrEmpty($Answer))
         {
         $Answer = Read-Host 'Créer un autre utilisateur ? (O/N)'

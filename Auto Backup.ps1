@@ -13,7 +13,7 @@ Action - Ce que fait la tâche.
 Lance le script "Save_User.ps1".
 #>
 
-$ScriptBackUp = 'C:\Users\Administrateur\Documents\GitHub\ScriptAD\Script_Save_User.ps1'
+$ScriptBackUp = '\\SRVFRANCISCA\C$\Users\Administrateur\Documents\GitHub\ScriptAD\Script_Save_User.ps1'
 
 $Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "-NonInteractive -NoLogo -NoProfile -File '$ScriptBackUp'"
 

@@ -1,7 +1,7 @@
 ﻿<#
 Auteur : Martin Guigot
 Date : 09/05/2022
-Version : 1.03
+Version : 1.1
 Description : Script intéractif de consultation et d'export des groupes d'un utilisateur de l'Active Directory.
 #>
 
@@ -61,7 +61,6 @@ do
 
                 # Création d'un dossier Export s'il n'existe pas.
                 $TestDirExport = Test-Path -Path $DirExport
-                $TestDirExport
                 switch ($TestDirExport) {
                     False {New-Item -Name 'Export' -ItemType Directory -Path $DirDoc | Out-Null}
                     Default{}  
