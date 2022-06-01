@@ -134,7 +134,7 @@ while ([String]::IsNullOrEmpty($Answer))
                             $ACl = Get-Acl -Path $DirPerso\$Name
                             $ACl.SetOwner($ACLUser)
                             $ACl | Set-Acl -Path $DirPerso\$Name
-                            "Les autorisations NTFS du dossier personnel de l'utilisateur ont été configuré" -ForegroundColor Green
+                            Write-Host "Les autorisations NTFS du dossier personnel de l'utilisateur ont été configuré" -ForegroundColor Green
                             }
                         catch
                             {
